@@ -1,12 +1,18 @@
-import React from "react";
+import React, {useContext} from "react";
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import { AuthContext } from "../context/auth";
+import FooterTabs from "../components/nav/FooterTabs";
+
 
 const Home = () => {
+  const {state, setState} = useContext(AuthContext);
+  
     return (  
-        <View style={styles.container}>
-        <Text>Hey SEMO</Text>
-        <StatusBar style="auto" />
+      <View style={styles.container}>
+          <StatusBar style="auto" />
+          <Text>Hey SEfMO</Text>
+          <FooterTabs/>
       </View>
     );
 }
@@ -14,6 +20,8 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'space-between',
+    marginVertical: 15, 
   }
 })
  

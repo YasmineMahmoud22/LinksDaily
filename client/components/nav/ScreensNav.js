@@ -1,12 +1,14 @@
-import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { DefaultTheme } from '@react-navigation/native';
-import SignUp from '../../screens/SignUp';
-import Home from '../../screens/Home';
-import SignIn from '../../screens/SignIn';
-import Account from '../../screens/Account';
-import Links from '../../screens/Links';
-import Post from '../../screens/Post';
+import React, { useContext } from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { DefaultTheme } from "@react-navigation/native";
+import { AuthContext } from "../../context/auth";
+import SignUp from "../../screens/SignUp";
+import Home from "../../screens/Home";
+import SignIn from "../../screens/SignIn";
+import Account from "../../screens/Account";
+import Links from "../../screens/Links";
+import Post from "../../screens/Post";
+import HeaderTab from "./HeaderTabs";
 
 const theme = DefaultTheme;
 theme.colors.background = "#ffffff";
@@ -14,34 +16,60 @@ theme.colors.background = "#ffffff";
 const stack = createNativeStackNavigator();
 
 const ScreensNav = () => {
-    return ( 
-        <stack.Navigator initialRouteName='SignUp'>  
-            <stack.Screen  
-                name='SignUp'
-                component={SignUp}
-            />
-            <stack.Screen  
-                name='Home'
-                component={Home}
-            />
-            <stack.Screen  
-                name='SignIn'
-                component={SignIn}
-            />
-            <stack.Screen  
-                name='Account'
-                component={Account}
-            />
-            <stack.Screen  
-                name='Links'
-                component={Links}
-            />
-            <stack.Screen  
-                name='Post'
-                component={Post}
-            />
-        </stack.Navigator>
-     );
-}
- 
+  const [state, setState] = useContext(AuthContext);
+  const authenticated = state?.user !== null && state?.token !== "";
+
+  return (
+    <stack.Navigator initialRouteName='SignIn'>
+      {authenticated ? (
+        <>
+          <stack.Screen
+            name='Home'
+            component={Home}
+            options={{
+              title: "Links Daily",
+              headerRight: () => <HeaderTab />,
+              headerTitleAlign: "center",
+            }}
+          />
+          <stack.Screen
+            name='Account'
+            component={Account}
+            options={{
+              headerTitleAlign: "center",
+            }}
+          />
+          <stack.Screen
+            name='Links'
+            component={Links}
+            options={{
+              headerTitleAlign: "center",
+            }}
+          />
+          <stack.Screen
+            name='Post'
+            component={Post}
+            options={{
+              headerTitleAlign: "center",
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <stack.Screen
+            name='SignIn'
+            component={SignIn}
+            options={{ headerShown: false }}
+          />
+          <stack.Screen
+            name='SignUp'
+            component={SignUp}
+            options={{ headerShown: false }}
+          />
+        </>
+      )}
+    </stack.Navigator>
+  );
+};
+
 export default ScreensNav;

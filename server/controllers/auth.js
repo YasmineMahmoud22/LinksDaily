@@ -2,12 +2,29 @@
 import User from "../models/user";
 import { hashPassword, comparePassword } from "../helpers/auth";
 import jwt from "jsonwebtoken";
-import nanoid from "nanoid";
+import  nanoid  from 'nanoid'
+// const expressJwt = require('express-jwt');
+import expressJwt from "express-jwt";
+import cloudinary from "cloudinary"; 
 
 // sendgrid
 require("dotenv").config();
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_KEY);
+
+//cloudinary 
+cloudinary.config({
+  cloud_name: process.env.CLOUDNARY_NAME,
+  api_key: process.env.CLOUDNARY_KEY,
+  api_secret: process.env.CLOUDNARY_SECRET
+})
+
+
+//middleware 
+export const requireSignin = expressJwt({
+   secret: process.env.JWT_SECRET,
+   algorithms: ['HS256']
+});
 
 export const signup = async (req, res) => {
   console.log("HIT SIGNUP");
@@ -153,5 +170,52 @@ export const resetPassword = async (req, res) => {
     return res.json({ ok: true });
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const uploadImage = async (req, res) => {
+  // console.log("uploadimage > user _id", req.user._id);
+  try {
+    const result = await cloudinary.uploader.upload(req.body.image,{
+      public_id : nanoid(),
+      resource_type: "jpg",
+    } )
+    const user = await User.findByIdAndUpdate(req.user._id, {
+      image: {
+        public_id: result.public_id,
+        url: result.secure_url,
+      }
+    },{new: true}
+    );
+    return res.json({
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      image: user.image,
+    })
+  } catch (error) {
+    console.log(error)
+  }
+
+};
+
+export const updatePassword = async (req, res) => {
+  try {
+    const {password} = req.body;
+    if (password && password.length < 6) {
+      return res.json({
+        error: 'Password is required and should be min 6 '
+      })
+    }else{
+      const hashedPassword = await hashPassword(password);
+      const user = await User.findByIdAndUpdate(req.user._id, {
+        password: hashedPassword,
+      });
+      user.password = undefined;
+      user.secret = undefined;
+      return res.json(user);
+    }
+  } catch (error) {
+    console.log(error)
   }
 };
