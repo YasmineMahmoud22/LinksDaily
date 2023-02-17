@@ -15,7 +15,7 @@ sgMail.setApiKey(process.env.SENDGRID_KEY);
 //cloudinary 
 cloudinary.config({
   cloud_name: process.env.CLOUDNARY_NAME,
-  api_key: process.env.CLOUDNARY_KEY,
+  api_key: process.env.CLOUDNARY_KEY, 
   api_secret: process.env.CLOUDNARY_SECRET
 })
 
@@ -134,12 +134,12 @@ export const forgotPassword = async (req, res) => {
     from: process.env.EMAIL_FROM,
     to: user.email,
     subject: "Password reset code",
-    html: "<h1>Your password  reset code is: {resetCode}</h1>"
+    html: `<h1>Your password  reset code is: ${resetCode}</h1>`
   };
   // send email
   try {
     const data = await sgMail.send(emailData);
-    console.log(data);
+    console.log("Email data => ",  data);
     res.json({ ok: true });
   } catch (err) {
     console.log(err);

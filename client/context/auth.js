@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
   const navigation = useNavigation();
 
   //config axios
-  const token = state && state.token ? state.token:'';
+  const token = state && state.token ? state.token : "";
   axios.defaults.baseURL = API;
   //sending token in the headers by default
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;

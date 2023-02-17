@@ -9,6 +9,8 @@ import Account from "../../screens/Account";
 import Links from "../../screens/Links";
 import Post from "../../screens/Post";
 import HeaderTab from "./HeaderTabs";
+import ForgetPassword from "../../screens/ForgetPassword";
+import LinkView from "../../screens/LinkView";
 
 const theme = DefaultTheme;
 theme.colors.background = "#ffffff";
@@ -53,6 +55,15 @@ const ScreensNav = () => {
               headerTitleAlign: "center",
             }}
           />
+          <stack.Screen
+            name="LinkView"
+            component={LinkView}
+            options={{
+              title: "",
+              headerTransparent: true
+            }}
+          
+          />
         </>
       ) : (
         <>
@@ -64,6 +75,11 @@ const ScreensNav = () => {
           <stack.Screen
             name='SignUp'
             component={SignUp}
+            options={{ headerShown: false }}
+          />
+          <stack.Screen
+            name='ForgetPassword'
+            component={ForgetPassword}
             options={{ headerShown: false }}
           />
         </>

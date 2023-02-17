@@ -1,61 +1,51 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import Text from "@kaloraat/react-native-text";
-import { StatusBar } from "expo-status-bar";
-import UserInput from "../components/auth/UserInput";
-import SubmitButton from "../components/auth/SubmitButton";
-import axios from "axios";
 import CircleLogo from "../components/auth/CircleLogo";
-import { AuthContext } from "../context/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
+import SubmitButton from "../components/auth/SubmitButton";
+import UserInput from "../components/auth/UserInput";
+import axios from "axios";
 
-const SignIn = ({ navigation }) => {
+const ForgetPassword = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [state, setState] = useContext(AuthContext);
 
   const Inputlabels = [
     { InputLabel: "email", value: email, InputValue: setEmail },
-    { InputLabel: "password", value: password, InputValue: setPassword },
+    // { InputLabel: "password", value: password, InputValue: setPassword },
   ];
 
   const handleSubmit = async () => {
     setLoading(true);
-    if (!email && !password) {
-      alert("All fields are required ");
+
+    if (!email) {
+      alert("Email is required");
       setLoading(false);
-      return; // will end the function
+      return;// to end the function immediatly 
     }
+
     try {
-      const { data } = await axios.post("/signin", {
+      const { data } = await axios.post("/forgot-password", {
         email,
-        password,
       });
-      if (data.error) {
-        alert(data.error);
-        setLoading(false);
-      } else {
-        setState(data);
-        await AsyncStorage.setItem("@auth", JSON.stringify(data));
-        setLoading(false);
-        console.log("Sign In Success => ");
-        alert("Sign In Successfully");
-        navigation.navigate("Home");
-      }
-    }catch (error) {
-      console.log("handleSubmit error => ", error);
+      setLoading(false);
+      console.log(" RESET DATA RES => ", data);
+      alert("Enter the password reset code we sent in your email") 
+
+    } catch (error) {
+      alert("Error sending email, try again ");
+      console.log(error);
       setLoading(false);
     }
   };
+
   return (
     <View style={styles.container}>
       <StatusBar style='auto' />
       <ScrollView>
         <CircleLogo />
-        <Text title center color='#ff1a1a'>
-          Sign In
-        </Text>
         {Inputlabels.map(({ InputLabel, value, InputValue }) => (
           <UserInput
             key={InputLabel}
@@ -70,28 +60,21 @@ const SignIn = ({ navigation }) => {
         ))}
         <SubmitButton
           loading={loading}
-          title='Sign In'
+          title='Request Reset Code'
           handleSubmit={handleSubmit}
         />
-        <Text center>
-          Not yet registered ?{" "}
-          <Text color='#ff4d4d' onPress={() => navigation.navigate("SignUp")}>
-            Sign Up
-          </Text>
-        </Text>
         <Text
           center
           color='#ff8080'
           style={{ marginTop: 10 }}
-          onPress={() => navigation.navigate("ForgetPassword")}
+          onPress={() => navigation.navigate("SignIn")}
         >
-          Forget password ?
+          Sign In
         </Text>
       </ScrollView>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -100,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignIn;
+export default ForgetPassword;

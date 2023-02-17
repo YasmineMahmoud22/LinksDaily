@@ -15,23 +15,26 @@ const FooterTabs = () => {
   ];
 
   return (
-    <View style={styles.TabsContainer}>
-      {Tabs.map(({ TabName, IconName }) => (
-        <TouchableOpacity
-          key={TabName}
-          onPress={() => navigation.navigate(TabName)}
-        >
-          <>
-            <FontAwesome5
-              name={IconName}
-              size={25}
-              style={styles.Icon}
-              color={TabName === route.name ? "#ff9999" : null}
-            />
-            <Text> {TabName} </Text>
-          </>
-        </TouchableOpacity>
-      ))}
+    <View>
+    <View  style={styles.divider}/>
+      <View style={styles.TabsContainer}>
+        {Tabs.map(({ TabName, IconName }) => (
+          <TouchableOpacity
+            key={TabName}
+            onPress={() => navigation.navigate(TabName)}
+          >
+            <>
+              <FontAwesome5
+                name={IconName}
+                size={25}
+                style={styles.Icon}
+                color={TabName === route.name ? "#ff9999" : null}
+              />
+              <Text> {TabName} </Text>
+            </>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 };
@@ -47,6 +50,10 @@ const styles = StyleSheet.create({
     marginBottom: 3,
     alignSelf: "center",
   },
+  divider: {
+    height: 0.5,
+    backgroundColor: "#000000",
+  }
 });
 
 export default FooterTabs;
