@@ -8,7 +8,7 @@ const Links = () => {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <Text>Hey SEfMO</Text>
+         <Text  style={styles.shadow}>hgh</Text>
       <FooterTabs />
     </View>
   );
@@ -19,6 +19,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     marginVertical: 15,
+  },
+  shadow: {
+ 
+    backgroundColor: "#ffffff",
+    elevation: 5,
+    shadowColor: "#000000",
+ 
   },
 });
 

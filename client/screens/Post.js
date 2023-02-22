@@ -9,10 +9,14 @@ import urlRegex from "url-regex";
 import PreviewCard from "../components/links/PreviewCard";
 import axios from "axios";
 import { LinkContext } from "../context/link";
+import { AuthContext } from "../context/auth";
+
 
 const Post = ({ navigation }) => {
   //context
   const [links, setLinks] = useContext(LinkContext);
+  const [auth, setAuth] = useContext(AuthContext);
+
   //state
   const [link, setLink] = useState("");
   const [title, setTitle] = useState("");
@@ -52,6 +56,7 @@ const Post = ({ navigation }) => {
         title,
         urlPreview,
       });
+      data.postedBy = auth.user.name;
       console.log("data = > ", data);
       setLinks([data, ...links]);
       setTimeout(() => {

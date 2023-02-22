@@ -11,6 +11,7 @@ import Post from "../../screens/Post";
 import HeaderTab from "./HeaderTabs";
 import ForgetPassword from "../../screens/ForgetPassword";
 import LinkView from "../../screens/LinkView";
+import Profile from "../../screens/Profile";
 
 const theme = DefaultTheme;
 theme.colors.background = "#ffffff";
@@ -56,13 +57,20 @@ const ScreensNav = () => {
             }}
           />
           <stack.Screen
-            name="LinkView"
+            name='LinkView'
             component={LinkView}
             options={{
               title: "",
-              headerTransparent: true
+              headerTransparent: true,
             }}
-          
+          />
+          <stack.Screen
+            name='profile'
+            component={Profile}
+            options={{
+              title: "",
+              headerTransparent: true,
+            }}
           />
         </>
       ) : (

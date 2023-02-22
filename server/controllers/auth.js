@@ -1,5 +1,6 @@
 
 import User from "../models/user";
+import Link from "../models/link";
 import { hashPassword, comparePassword } from "../helpers/auth";
 import jwt from "jsonwebtoken";
 import  nanoid  from 'nanoid'
@@ -218,4 +219,14 @@ export const updatePassword = async (req, res) => {
   } catch (error) {
     console.log(error)
   }
+};
+
+exports.userProfile = async (req, res) => {
+ try {
+  const profile = await User.findById(req.params.userId).select("-password -secret");
+  const links = await Link.find({postedBy: req.params.userId}).select("-likes -urlPreview -views")
+  return res.json({profile, links});
+ } catch (error) {
+  console.log(error);
+ }
 };

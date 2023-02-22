@@ -1,18 +1,60 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
 import Text from "@kaloraat/react-native-text";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import axios from "axios";
+import { LinkContext } from "../../context/link";
+import IconSet from "./IconSet";
+import { AuthContext } from "../../context/auth";
 
 const PreviewCard = ({
   ogTitle = "unTitled",
   ogImage = { url: "https://via.placeholder.com/150x60.png?text=Image" },
   ogDescription = "No discription found",
   handlePress = (f) => f,
-  link
+  link = {},
+  showIcons = false,
 }) => {
+  const [links, setLinks] = useContext(LinkContext);
+  const [auth, setAuth] = useContext(AuthContext);
+
+  const handleLikePress = async (link) => {
+    const { data } = await axios.put("/like", { linkId: link._id });
+    setLinks((links) => {
+      const index = links.findIndex((l) => l._id === link._id);
+      data.postedBy = auth.user;
+      links[index] = data;
+      return [...links];
+    });
+  };
+  const handleUnLikePress = async (link) => {
+    const { data } = await axios.put("/unlike", { linkId: link._id });
+    setLinks((links) => {
+      const index = links.findIndex((l) => l._id === link._id);
+      data.postedBy = auth.user;
+      links[index] = data;
+      return [...links];
+    });
+  };
+  const imageUrl = (ogImage) => {
+    if (ogImage?.url) {
+      return ogImage.url;
+    } else if (ogImage?.url.length > 0) {
+      return ogImage[0].url;
+    }
+  };
+
   return (
     <View style={styles.previewCountainer}>
-      <Image source={{ uri: ogImage.url }} style={styles.previewImage} />
-      <TouchableOpacity onPress={()=> handlePress(link)}>
+      <Image source={{ uri: imageUrl(ogImage) }} style={styles.previewImage} />
+      {showIcons && (
+        <IconSet
+          handleLikePress={handleLikePress}
+          handleUnLikePress={handleUnLikePress}
+          link={link}
+        />
+      )}
+      <TouchableOpacity onPress={() => handlePress(link)}>
         <View style={styles.urlDetailes}>
           <Text style={{ paddingTob: 5, paddingBottom: 5 }}>{ogTitle}</Text>
           <Text small>{ogDescription}</Text>

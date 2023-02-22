@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const { Schema, ObjectId } = mongoose;
+const { Schema, ObjectId, name } = mongoose;
 
 const linkSchema = new mongoose.Schema(
   {
@@ -14,7 +14,7 @@ const linkSchema = new mongoose.Schema(
       required: true,
     },
     urlPreview: {},
-    postedBy: {
+    postedBy:{
       type: ObjectId,
       ref: "User",
     },
@@ -22,10 +22,10 @@ const linkSchema = new mongoose.Schema(
       type: Number,
       default: 0 
     },
-    liked: {
+    likes:[ {
       type: ObjectId,
       ref: "User",
-    },
+    }],
   },
   { timestamps: true }
 );

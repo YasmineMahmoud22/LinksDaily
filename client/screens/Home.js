@@ -20,8 +20,15 @@ const Home = ({ navigation }) => {
     const { data } = await axios.get("/links");
     setLinks(data);
   };
-  const handlePress = (link) => {
-    navigation.navigate("LinkView", {link});
+  const handlePress = async (link) => {
+    await axios.put(`/view-count/${link._id}`);
+    navigation.navigate("LinkView", { link });
+
+    setLinks(() => {
+      const index = links.findIndex((l) => l._id === link._id);
+      links[index] = { ...link, views: link.views + 1 };
+      return [...links];
+    });
   };
 
   return (
@@ -34,7 +41,12 @@ const Home = ({ navigation }) => {
         {links &&
           links.map((link) => (
             <View key={link._id} style={{ alignItems: "center" }}>
-              <PreviewCard {...link.urlPreview} handlePress={handlePress} link={link} />
+              <PreviewCard
+                {...link.urlPreview}
+                handlePress={handlePress}
+                link={link}
+                showIcons={true}
+              />
             </View>
           ))}
       </ScrollView>
